@@ -5,11 +5,7 @@
 
 # dotenv files
 .env
-.idea/workspace.xml
-.idea/tasks.xml
-bin/
-obj/
-*.user
+
 # User-specific files
 *.rsuser
 *.suo
