@@ -4,6 +4,7 @@ namespace LegacyRenewalApp
 {
     public class RenewalInvoice
     {
+        //this ALSO does a lot, it's a bit abstract
         public string InvoiceNumber { get; set; } = string.Empty;
         public string CustomerName { get; set; } = string.Empty;
         public string PlanCode { get; set; } = string.Empty;

@@ -12,21 +12,25 @@ namespace LegacyRenewalApp
             bool includePremiumSupport,
             bool useLoyaltyPoints)
         {
+            //checks customer id...
             if (customerId <= 0)
             {
                 throw new ArgumentException("Customer id must be positive");
             }
 
+            //Checks plan code
             if (string.IsNullOrWhiteSpace(planCode))
             {
                 throw new ArgumentException("Plan code is required");
             }
 
+            //seat count??
             if (seatCount <= 0)
             {
                 throw new ArgumentException("Seat count must be positive");
             }
-
+            
+            //this might be the only one it ACTUALLY is supposed to have
             if (string.IsNullOrWhiteSpace(paymentMethod))
             {
                 throw new ArgumentException("Payment method is required");
@@ -50,6 +54,7 @@ namespace LegacyRenewalApp
             decimal discountAmount = 0m;
             string notes = string.Empty;
 
+            //Customer acc - create interface, implement for each variant
             if (customer.Segment == "Silver")
             {
                 discountAmount += baseAmount * 0.05m;
@@ -71,6 +76,7 @@ namespace LegacyRenewalApp
                 notes += "education discount; ";
             }
 
+            //interface, class
             if (customer.YearsWithCompany >= 5)
             {
                 discountAmount += baseAmount * 0.07m;
@@ -82,6 +88,7 @@ namespace LegacyRenewalApp
                 notes += "basic loyalty discount; ";
             }
 
+            //Renewallnvoice; interface, class
             if (seatCount >= 50)
             {
                 discountAmount += baseAmount * 0.12m;
@@ -98,6 +105,7 @@ namespace LegacyRenewalApp
                 notes += "small team discount; ";
             }
 
+            //customer info
             if (useLoyaltyPoints && customer.LoyaltyPoints > 0)
             {
                 int pointsToUse = customer.LoyaltyPoints > 200 ? 200 : customer.LoyaltyPoints;
@@ -105,6 +113,7 @@ namespace LegacyRenewalApp
                 notes += $"loyalty points used: {pointsToUse}; ";
             }
 
+            //this should also be in renewallnvoice
             decimal subtotalAfterDiscount = baseAmount - discountAmount;
             if (subtotalAfterDiscount < 300m)
             {
@@ -112,6 +121,7 @@ namespace LegacyRenewalApp
                 notes += "minimum discounted subtotal applied; ";
             }
 
+            //subscription plan stuff, interace + class
             decimal supportFee = 0m;
             if (includePremiumSupport)
             {
@@ -131,6 +141,7 @@ namespace LegacyRenewalApp
                 notes += "premium support included; ";
             }
 
+            //Renewallnvoice.cs
             decimal paymentFee = 0m;
             if (normalizedPaymentMethod == "CARD")
             {
@@ -157,6 +168,7 @@ namespace LegacyRenewalApp
                 throw new ArgumentException("Unsupported payment method");
             }
 
+            //customer: interface + class
             decimal taxRate = 0.20m;
             if (customer.Country == "Poland")
             {
@@ -179,12 +191,14 @@ namespace LegacyRenewalApp
             decimal taxAmount = taxBase * taxRate;
             decimal finalAmount = taxBase + taxAmount;
 
+            //this is ridiculous, renewallnvoice
             if (finalAmount < 500m)
             {
                 finalAmount = 500m;
                 notes += "minimum invoice amount applied; ";
             }
 
+            //jesus christ.
             var invoice = new RenewalInvoice
             {
                 InvoiceNumber = $"INV-{DateTime.UtcNow:yyyyMMdd}-{customerId}-{normalizedPlanCode}",
