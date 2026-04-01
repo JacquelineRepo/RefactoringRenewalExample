@@ -4,6 +4,7 @@ namespace LegacyRenewalApp
 {
     public class SubscriptionRenewalService
     {
+        //this class WILL still make an invoice, but my god lots needs to go. count responsibilities  
         public RenewalInvoice CreateRenewalInvoice(
             int customerId,
             string planCode,
