@@ -13,30 +13,30 @@ namespace LegacyRenewalApp
             bool includePremiumSupport,
             bool useLoyaltyPoints)
         {
-            //checks customer id...
+            //checks customer id... If customer id is valid
             if (customerId <= 0)
             {
                 throw new ArgumentException("Customer id must be positive");
             }
 
-            //Checks plan code
+            //Checks plan code - if SubscriptionPlan is null
             if (string.IsNullOrWhiteSpace(planCode))
             {
                 throw new ArgumentException("Plan code is required");
             }
 
-            //seat count??
+            //renewall inovice
             if (seatCount <= 0)
             {
                 throw new ArgumentException("Seat count must be positive");
             }
             
-            //this might be the only one it ACTUALLY is supposed to have
+            //renewall invoice
             if (string.IsNullOrWhiteSpace(paymentMethod))
             {
                 throw new ArgumentException("Payment method is required");
             }
-
+            //this is ridicoulus
             string normalizedPlanCode = planCode.Trim().ToUpperInvariant();
             string normalizedPaymentMethod = paymentMethod.Trim().ToUpperInvariant();
 
@@ -45,7 +45,7 @@ namespace LegacyRenewalApp
 
             var customer = customerRepository.GetById(customerId);
             var plan = planRepository.GetByCode(normalizedPlanCode);
-
+            //this may stay
             if (!customer.IsActive)
             {
                 throw new InvalidOperationException("Inactive customers cannot renew subscriptions");
@@ -106,7 +106,7 @@ namespace LegacyRenewalApp
                 notes += "small team discount; ";
             }
 
-            //customer info
+            //customer, 
             if (useLoyaltyPoints && customer.LoyaltyPoints > 0)
             {
                 int pointsToUse = customer.LoyaltyPoints > 200 ? 200 : customer.LoyaltyPoints;
@@ -142,7 +142,7 @@ namespace LegacyRenewalApp
                 notes += "premium support included; ";
             }
 
-            //Renewallnvoice.cs
+            //Renewallnvoice.cs interface + class
             decimal paymentFee = 0m;
             if (normalizedPaymentMethod == "CARD")
             {
